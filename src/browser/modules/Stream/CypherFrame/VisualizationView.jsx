@@ -24,7 +24,7 @@ import { deepEquals } from 'services/utils'
 import * as grassActions from 'shared/modules/grass/grassDuck'
 import bolt from 'services/bolt/bolt'
 import { withBus } from 'react-suber'
-import { ExplorerComponent } from '../../D3Visualization/components/Explorer'
+import { ExplorerComponentWithBus } from '../../D3Visualization/components/Explorer'
 import { StyledVisContainer } from './VisualizationView.styled'
 
 import { CYPHER_REQUEST } from 'shared/modules/cypher/cypherDuck'
@@ -169,7 +169,7 @@ export class Visualization extends Component {
 
     return (
       <StyledVisContainer fullscreen={this.props.fullscreen}>
-        <ExplorerComponent
+        <ExplorerComponentWithBus
           maxNeighbours={this.props.maxNeighbours}
           initialNodeDisplay={this.props.initialNodeDisplay}
           graphStyleData={this.props.graphStyleData}
@@ -205,5 +205,8 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(mapStateToProps, mapDispatchToProps)(Visualization)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Visualization)
 )
