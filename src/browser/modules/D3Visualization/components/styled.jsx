@@ -380,3 +380,39 @@ export const StyledZoomButton = styled.button`
     }
   }
 `
+
+export const StyledEditHolder = styled.div`
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  padding: 3px;
+  border-right: #e6e9ef solid 1px;
+  border-top: #e6e9ef solid 1px;
+  background: #fff;
+`
+
+export const StyledEditButton = styled.button`
+  display: list-item;
+  list-style-type: none;
+  float: left;
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  border: none;
+  color: #9b9da2;
+  background: transparent;
+  border-color: black;
+  padding: 8px;
+  &:hover {
+    color: black;
+  }
+  &:focus {
+    outline: none;
+  }
+  &.faded {
+    opacity: 0.3;
+    cursor: auto;
+    &:hover {
+      color: #9b9da2;
+    }
+  }
+`

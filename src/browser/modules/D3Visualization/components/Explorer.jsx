@@ -27,6 +27,8 @@ import { InspectorComponent } from './Inspector'
 import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
 
+import { withBus } from 'react-suber'
+
 const deduplicateNodes = nodes => {
   return nodes.reduce(
     (all, curr) => {
@@ -226,6 +228,7 @@ export class ExplorerComponent extends Component {
           assignVisElement={this.props.assignVisElement}
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
           setGraph={this.props.setGraph}
+          selectedItem={this.state.selectedItem}
         />
         <InspectorComponent
           fullscreen={this.props.fullscreen}
@@ -238,4 +241,5 @@ export class ExplorerComponent extends Component {
     )
   }
 }
+export const ExplorerComponentWithBus = withBus(ExplorerComponent)
 export const Explorer = ExplorerComponent
