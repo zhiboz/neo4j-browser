@@ -19,23 +19,29 @@
  */
 
 import React, { Component } from 'react'
-import { createGraph, mapRelationships, getGraphStats } from '../mapper'
+import { deepEquals } from 'services/utils'
+import {
+  createGraph,
+  getGraphStats,
+  mapNodes,
+  mapRelationships
+} from '../mapper'
 import { GraphEventHandler } from '../GraphEventHandler'
 import '../lib/visualization/index'
 import { dim } from 'browser-styles/constants'
 import {
-  StyledZoomHolder,
-  StyledEditHolder,
   StyledEditButton,
+  StyledEditHolder,
   StyledSvgWrapper,
-  StyledZoomButton
+  StyledZoomButton,
+  StyledZoomHolder
 } from './styled'
 import {
-  ZoomInIcon,
-  ZoomOutIcon,
-  TrashItemIcon,
   AddItemIcon,
-  EditItemIcon
+  EditItemIcon,
+  TrashItemIcon,
+  ZoomInIcon,
+  ZoomOutIcon
 } from 'browser-components/icons/Icons'
 import graphView from '../lib/visualization/components/graphView'
 
@@ -68,7 +74,8 @@ export class GraphComponent extends Component {
 
   trashItemClicked (el) {
     const item = this.props.selectedItem
-    console.log('TODO: Trash ', item)
+    this.props.deleteItem(item)
+    this.graphEH.nodeClose(item)
   }
 
   editItemClicked (el) {
@@ -77,7 +84,9 @@ export class GraphComponent extends Component {
   }
 
   addItemClicked (el) {
-    console.log('TODO Add item')
+    this.props.addItem({
+      type: 'node'
+    })
   }
 
   getVisualAreaHeight () {

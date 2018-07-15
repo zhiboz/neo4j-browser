@@ -116,7 +116,15 @@ export class ExplorerComponent extends Component {
     this.setState({ selectedItem: item })
   }
 
-  onGraphModelChange(stats) {
+  deleteItem (item) {
+    this.props.deleteItem(item)
+  }
+
+  addItem (item) {
+    this.props.addItem(item)
+  }
+
+  onGraphModelChange (stats) {
     this.setState({ stats: stats })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
@@ -222,6 +230,8 @@ export class ExplorerComponent extends Component {
           getNodeNeighbours={this.getNodeNeighbours.bind(this)}
           onItemMouseOver={this.onItemMouseOver.bind(this)}
           onItemSelect={this.onItemSelect.bind(this)}
+          deleteItem={this.deleteItem.bind(this)}
+          addItem={this.addItem.bind(this)}
           graphStyle={this.state.graphStyle}
           styleVersion={this.state.styleVersion} // cheap way for child to check style updates
           onGraphModelChange={this.onGraphModelChange.bind(this)}

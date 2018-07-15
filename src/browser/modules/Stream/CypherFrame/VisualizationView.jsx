@@ -128,7 +128,15 @@ export class Visualization extends Component {
     })
   }
 
-  getInternalRelationships(existingNodeIds, newNodeIds) {
+  deleteItem (item) {
+    console.log(item)
+  }
+
+  addItem (item) {
+    console.log(item)
+  }
+
+  getInternalRelationships (existingNodeIds, newNodeIds) {
     newNodeIds = newNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
@@ -175,6 +183,8 @@ export class Visualization extends Component {
           graphStyleData={this.props.graphStyleData}
           updateStyle={this.props.updateStyle}
           getNeighbours={this.getNeighbours.bind(this)}
+          deleteItem={this.deleteItem.bind(this)}
+          addItem={this.addItem.bind(this)}
           nodes={this.state.nodes}
           relationships={this.state.relationships}
           fullscreen={this.props.fullscreen}
