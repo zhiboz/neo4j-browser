@@ -117,11 +117,15 @@ export class ExplorerComponent extends Component {
   }
 
   deleteItem (item) {
-    this.props.deleteItem(item)
+    return this.props.deleteItem(item)
   }
 
   addItem (item) {
-    this.props.addItem(item)
+    return this.props.addItem(item)
+  }
+
+  connectItems (source, target) {
+    return this.props.connectItems(source, target)
   }
 
   onGraphModelChange (stats) {
@@ -232,6 +236,7 @@ export class ExplorerComponent extends Component {
           onItemSelect={this.onItemSelect.bind(this)}
           deleteItem={this.deleteItem.bind(this)}
           addItem={this.addItem.bind(this)}
+          connectItems={this.connectItems.bind(this)}
           graphStyle={this.state.graphStyle}
           styleVersion={this.state.styleVersion} // cheap way for child to check style updates
           onGraphModelChange={this.onGraphModelChange.bind(this)}
