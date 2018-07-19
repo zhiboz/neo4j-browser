@@ -38,6 +38,7 @@ import {
 } from './styled'
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
+import { AddItemIcon, PlusIcon } from 'src-root/browser/components/icons/Icons'
 import ClickableUrls from '../../../components/clickable-urls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
@@ -47,12 +48,19 @@ const mapItemProperties = itemProperties =>
       keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
     .map((prop, i) => (
-      <StyledInspectorFooterRowListPair className="pair" key={'prop' + i}>
-        <StyledInspectorFooterRowListKey className="key">
+      <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
+        <StyledInspectorFooterRowListKey
+          className='key'
+          title={'Click to remove ' + prop.key}
+          style={{ cursor: 'not-allowed' }}
+        >
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
-        <StyledInspectorFooterRowListValue className="value">
-          <ClickableUrls text={optionalToString(prop.value)} />
+        <StyledInspectorFooterRowListValue
+          className='value'
+          title={'Click to edit ' + prop.key}
+        >
+          {optionalToString(prop.value)}
         </StyledInspectorFooterRowListValue>
       </StyledInspectorFooterRowListPair>
     ))
@@ -62,13 +70,15 @@ const mapLabels = (graphStyle, itemLabels) => {
     const graphStyleForLabel = graphStyle.forNode({ labels: [label] })
     const style = {
       backgroundColor: graphStyleForLabel.get('color'),
-      color: graphStyleForLabel.get('text-color-internal')
+      color: graphStyleForLabel.get('text-color-internal'),
+      cursor: 'not-allowed'
     }
     return (
       <StyledLabelToken
         key={'label' + i}
         style={style}
         className={'token' + ' ' + 'token-label'}
+        title={'Click to remove label ' + label}
       >
         {label}
       </StyledLabelToken>
@@ -158,8 +168,15 @@ export class InspectorComponent extends Component {
         inspectorContent = (
           <StyledInlineList className="list-inline">
             {mapLabels(this.state.graphStyle, item.labels)}
-            <StyledInspectorFooterRowListPair key="pair" className="pair">
-              <StyledInspectorFooterRowListKey className="key">
+            <StyledLabelToken
+              className={'token token-label'}
+              title={'Click to add a new label'}
+              style={{ verticalAlign: 'middle' }}
+            >
+              <AddItemIcon />
+            </StyledLabelToken>
+            <StyledInspectorFooterRowListPair key='pair' className='pair'>
+              <StyledInspectorFooterRowListKey className='key'>
                 {'<id>:'}
               </StyledInspectorFooterRowListKey>
               <StyledInspectorFooterRowListValue className="value">
@@ -167,6 +184,13 @@ export class InspectorComponent extends Component {
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
             {mapItemProperties(item.properties)}
+            <StyledLabelToken
+              className={'token token-label'}
+              title={'Click to add a new property'}
+              style={{ verticalAlign: 'middle' }}
+            >
+              <AddItemIcon />
+            </StyledLabelToken>
           </StyledInlineList>
         )
       } else if (type === 'relationship') {
@@ -176,7 +200,8 @@ export class InspectorComponent extends Component {
             .get('color'),
           color: this.state.graphStyle
             .forRelationship(item)
-            .get('text-color-internal')
+            .get('text-color-internal'),
+          cursor: 'text'
         }
         inspectorContent = (
           <StyledInlineList className="list-inline">
@@ -184,6 +209,7 @@ export class InspectorComponent extends Component {
               key="token"
               style={style}
               className={'token' + ' ' + 'token-relationship-type'}
+              title={'Click to change type'}
             >
               {item.type}
             </StyledTokenRelationshipType>
@@ -196,6 +222,13 @@ export class InspectorComponent extends Component {
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
             {mapItemProperties(item.properties)}
+            <StyledLabelToken
+              className={'token token-label'}
+              title={'Click to add a new property'}
+              style={{ verticalAlign: 'middle' }}
+            >
+              <AddItemIcon />
+            </StyledLabelToken>
           </StyledInlineList>
         )
       }
