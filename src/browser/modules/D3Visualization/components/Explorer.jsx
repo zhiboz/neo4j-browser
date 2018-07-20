@@ -28,6 +28,7 @@ import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
 
 import { withBus } from 'react-suber'
+import { EditPropertyForm } from 'src-root/browser/modules/D3Visualization/components/EditForm'
 
 const deduplicateNodes = nodes => {
   return nodes.reduce(
@@ -70,6 +71,7 @@ export class ExplorerComponent extends Component {
       graphStyle.loadRules(rebasedStyle)
     }
     this.state = {
+      showForm: false,
       stats: { labels: {}, relTypes: {} },
       graphStyle,
       styleVersion: 0,
@@ -77,6 +79,8 @@ export class ExplorerComponent extends Component {
       relationships,
       selectedItem
     }
+
+    this.graphComponent = React.createRef()
   }
 
   getNodeNeighbours(node, currentNeighbours, callback) {
@@ -186,7 +190,52 @@ export class ExplorerComponent extends Component {
     })
   }
 
-  render() {
+  onAddProperty () {
+    this.setState({ showForm: 'addProperty' })
+  }
+
+  onEditProperty (key, value) {
+    this.setState({
+      showForm: 'editProperty',
+      propertyKey: key,
+      propertyValue: value
+    })
+  }
+
+  setPropertyOnSelectedItem (data) {
+    const graph = this.graphComponent.current
+
+    this.props
+      .setItemProperty(this.state.selectedItem, data.key, data.value)
+      .then(graph.updateGraph.bind(graph))
+  }
+
+  modalForm () {
+    const propertyKey = this.state.propertyKey
+    const propertyValue = this.state.propertyValue
+
+    switch (this.state.showForm) {
+      case 'addProperty':
+        return (
+          <EditPropertyForm
+            onClose={() => this.setState({ showForm: false })}
+            onSubmit={this.setPropertyOnSelectedItem.bind(this)}
+            values={{ key: '', value: '' }}
+          />
+        )
+
+      case 'editProperty':
+        return (
+          <EditPropertyForm
+            onClose={() => this.setState({ showForm: false })}
+            onSubmit={this.setPropertyOnSelectedItem.bind(this)}
+            values={{ key: propertyKey, value: propertyValue }}
+          />
+        )
+    }
+  }
+
+  render () {
     // This is a workaround to make the style reset to the same colors as when starting the browser with an empty style
     // If the legend component has the style it will ask the neoGraphStyle object for styling before the graph component,
     // and also doing this in a different order from the graph. This leads to different default colors being assigned to different labels.
@@ -244,6 +293,7 @@ export class ExplorerComponent extends Component {
           getAutoCompleteCallback={this.props.getAutoCompleteCallback}
           setGraph={this.props.setGraph}
           selectedItem={this.state.selectedItem}
+          ref={this.graphComponent}
         />
         <InspectorComponent
           fullscreen={this.props.fullscreen}
@@ -251,7 +301,10 @@ export class ExplorerComponent extends Component {
           selectedItem={this.state.selectedItem}
           graphStyle={this.state.graphStyle}
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
+          onAddProperty={this.onAddProperty.bind(this)}
+          onEditProperty={this.onEditProperty.bind(this)}
         />
+        {this.state.showForm && this.modalForm()}
       </StyledFullSizeContainer>
     )
   }
