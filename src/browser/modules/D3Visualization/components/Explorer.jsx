@@ -258,7 +258,9 @@ export class ExplorerComponent extends Component {
 
     this.props
       .addNodeLabel(this.state.selectedItem, data.label)
-      .then(graph.updateGraph.bind(graph))
+      .then(result => {
+        graph.updateGraph(result)
+      })
   }
 
   modalForm () {
