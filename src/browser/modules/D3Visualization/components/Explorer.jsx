@@ -226,6 +226,7 @@ export class ExplorerComponent extends Component {
         const old = result.relationships.reverse().shift()
         graph.addPartialGraph(result)
         graph.deleteRelationship(old)
+        // graph.click(result.relationships[0])
       })
   }
 
