@@ -28,7 +28,7 @@ import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
 
 import { withBus } from 'react-suber'
-import { EditPropertyForm } from 'src-root/browser/modules/D3Visualization/components/EditForm'
+import { EditPropertyForm, EditRelationshipTypeForm } from './EditForm'
 
 const deduplicateNodes = nodes => {
   return nodes.reduce(
@@ -210,6 +210,25 @@ export class ExplorerComponent extends Component {
       .then(graph.updateGraph.bind(graph))
   }
 
+  onEditRelationshipType (type) {
+    this.setState({
+      showForm: 'editRelationshipType',
+      relationshipType: type
+    })
+  }
+
+  setTypeOnSelectedRelationship (data) {
+    const graph = this.graphComponent.current
+
+    this.props
+      .setRelationshipType(this.state.selectedItem, data.relationshipType)
+      .then(result => {
+        const old = result.relationships.reverse().shift()
+        graph.addPartialGraph(result)
+        graph.deleteRelationship(old)
+      })
+  }
+
   setPropertyOnSelectedItem (data) {
     const graph = this.graphComponent.current
 
@@ -221,6 +240,7 @@ export class ExplorerComponent extends Component {
   modalForm () {
     const propertyKey = this.state.propertyKey
     const propertyValue = this.state.propertyValue
+    const relationshipType = this.state.relationshipType
 
     switch (this.state.showForm) {
       case 'addProperty':
@@ -238,6 +258,15 @@ export class ExplorerComponent extends Component {
             onClose={() => this.setState({ showForm: false })}
             onSubmit={this.setPropertyOnSelectedItem.bind(this)}
             values={{ key: propertyKey, value: propertyValue }}
+          />
+        )
+
+      case 'editRelationshipType':
+        return (
+          <EditRelationshipTypeForm
+            onClose={() => this.setState({ showForm: false })}
+            onSubmit={this.setTypeOnSelectedRelationship.bind(this)}
+            values={{ relationshipType: relationshipType }}
           />
         )
     }
@@ -311,6 +340,7 @@ export class ExplorerComponent extends Component {
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
           onAddProperty={this.onAddProperty.bind(this)}
           onEditProperty={this.onEditProperty.bind(this)}
+          onEditRelationshipType={this.onEditRelationshipType.bind(this)}
           onRemoveProperty={this.onRemoveProperty.bind(this)}
         />
         {this.state.showForm && this.modalForm()}

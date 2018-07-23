@@ -93,9 +93,7 @@ export class GraphComponent extends Component {
 
     this.props.deleteItem(item).then(item => {
       if (item.type === 'relationship') {
-        const relationship = this.graph.findRelationship(item.item.id)
-        this.graph.removeRelationship(relationship)
-        this.graphEH.propagateChange()
+        this.deleteRelationship(item.item)
       } else {
         this.graphEH.nodeClose(item)
       }
@@ -134,6 +132,12 @@ export class GraphComponent extends Component {
     this.graph.addRelationships(
       mapRelationships(graph.relationships, this.graph)
     )
+  }
+
+  deleteRelationship (item) {
+    const relationship = this.graph.findRelationship(item.id)
+    this.graph.removeRelationship(relationship)
+    this.graphEH.propagateChange()
   }
 
   updateGraph (graph) {
