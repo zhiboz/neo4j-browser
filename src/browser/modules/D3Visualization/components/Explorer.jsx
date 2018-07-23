@@ -28,7 +28,11 @@ import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
 
 import { withBus } from 'react-suber'
-import { EditPropertyForm, EditRelationshipTypeForm } from './EditForm'
+import {
+  EditPropertyForm,
+  EditRelationshipTypeForm,
+  AddNodeLabelForm
+} from './EditForm'
 
 const deduplicateNodes = nodes => {
   return nodes.reduce(
@@ -210,11 +214,23 @@ export class ExplorerComponent extends Component {
       .then(graph.updateGraph.bind(graph))
   }
 
+  onRemoveLabel (label) {
+    const graph = this.graphComponent.current
+
+    this.props
+      .removeNodeLabel(this.state.selectedItem, label)
+      .then(graph.updateGraph.bind(graph))
+  }
+
   onEditRelationshipType (type) {
     this.setState({
       showForm: 'editRelationshipType',
       relationshipType: type
     })
+  }
+
+  onAddLabel () {
+    this.setState({ showForm: 'addLabel' })
   }
 
   setTypeOnSelectedRelationship (data) {
@@ -226,7 +242,6 @@ export class ExplorerComponent extends Component {
         const old = result.relationships.reverse().shift()
         graph.addPartialGraph(result)
         graph.deleteRelationship(old)
-        // graph.click(result.relationships[0])
       })
   }
 
@@ -235,6 +250,14 @@ export class ExplorerComponent extends Component {
 
     this.props
       .setItemProperty(this.state.selectedItem, data.key, data.value)
+      .then(graph.updateGraph.bind(graph))
+  }
+
+  addLabelToSelectedItem (data) {
+    const graph = this.graphComponent.current
+
+    this.props
+      .addNodeLabel(this.state.selectedItem, data.label)
       .then(graph.updateGraph.bind(graph))
   }
 
@@ -268,6 +291,14 @@ export class ExplorerComponent extends Component {
             onClose={() => this.setState({ showForm: false })}
             onSubmit={this.setTypeOnSelectedRelationship.bind(this)}
             values={{ relationshipType: relationshipType }}
+          />
+        )
+
+      case 'addLabel':
+        return (
+          <AddNodeLabelForm
+            onClose={() => this.setState({ showForm: false })}
+            onSubmit={this.addLabelToSelectedItem.bind(this)}
           />
         )
     }
@@ -340,9 +371,11 @@ export class ExplorerComponent extends Component {
           graphStyle={this.state.graphStyle}
           onExpandToggled={this.onInspectorExpandToggled.bind(this)}
           onAddProperty={this.onAddProperty.bind(this)}
+          onAddLabel={this.onAddLabel.bind(this)}
           onEditProperty={this.onEditProperty.bind(this)}
           onEditRelationshipType={this.onEditRelationshipType.bind(this)}
           onRemoveProperty={this.onRemoveProperty.bind(this)}
+          onRemoveLabel={this.onRemoveLabel.bind(this)}
         />
         {this.state.showForm && this.modalForm()}
       </StyledFullSizeContainer>
