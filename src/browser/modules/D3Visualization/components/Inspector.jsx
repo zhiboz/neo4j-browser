@@ -42,7 +42,7 @@ import { AddItemIcon, PlusIcon } from 'src-root/browser/components/icons/Icons'
 import ClickableUrls from '../../../components/clickable-urls'
 import numberToUSLocale from 'shared/utils/number-to-US-locale'
 
-const mapItemProperties = (itemProperties, onEditProperty) =>
+const mapItemProperties = (itemProperties, onEditProperty, onRemoveProperty) =>
   itemProperties
     .sort(({ key: keyA }, { key: keyB }) =>
       keyA < keyB ? -1 : keyA === keyB ? 0 : 1
@@ -53,6 +53,7 @@ const mapItemProperties = (itemProperties, onEditProperty) =>
           className='key'
           title={'Click to remove ' + prop.key}
           style={{ cursor: 'not-allowed' }}
+          onClick={() => onRemoveProperty(prop.key)}
         >
           {prop.key + ': '}
         </StyledInspectorFooterRowListKey>
@@ -184,6 +185,11 @@ export class InspectorComponent extends Component {
                 {item.id}
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
+            {mapItemProperties(
+              item.properties,
+              this.props.onEditProperty,
+              this.props.onRemoveProperty
+            )}
             <StyledLabelToken
               className={'token token-label'}
               title={'Click to add property'}
@@ -192,7 +198,6 @@ export class InspectorComponent extends Component {
             >
               <AddItemIcon />
             </StyledLabelToken>
-            {mapItemProperties(item.properties, this.props.onEditProperty)}
           </StyledInlineList>
         )
       } else if (type === 'relationship') {
@@ -223,6 +228,11 @@ export class InspectorComponent extends Component {
                 {item.id}
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
+            {mapItemProperties(
+              item.properties,
+              this.props.onEditProperty,
+              this.props.onRemoveProperty
+            )}
             <StyledLabelToken
               className={'token token-label'}
               title={'Click to add a new property'}
@@ -231,7 +241,6 @@ export class InspectorComponent extends Component {
             >
               <AddItemIcon />
             </StyledLabelToken>
-            {mapItemProperties(item.properties, this.props.onEditProperty)}
           </StyledInlineList>
         )
       }
