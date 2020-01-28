@@ -1,20 +1,5 @@
-FROM node:10-jessie
-
-WORKDIR /usr/src
-
-# Install dependencies
-COPY package.json yarn.lock ./
-RUN yarn
-
-# Copy the relevant files to the working directory
-COPY . .
-
-# Build and export the app
-RUN yarn build
-RUN cp -R dist /public
-
-FROM node:8.2 AS build
-MAINTAINER Peter Heisig <peter.heisig@tu-dresden.de>
+FROM node:10-jessie AS build
+LABEL maintainer="Filip Muki Dobranić <filip@danesjenovdan.si>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -33,9 +18,10 @@ COPY . /browser
 #
 ################################################################################
 
-RUN npm install -g yarn
+# RUN npm install -g yarn
 WORKDIR /browser
-RUN yarn 
+RUN yarn
+# RUN yarn start
 RUN yarn build
 
 ################################################################################

@@ -40,6 +40,8 @@ import appWindowCode from 'icons/app-window-code.svg'
 import arrowLeft1 from 'icons/arrow-left-1.svg'
 import arrowRight1 from 'icons/arrow-right-1.svg'
 
+import styles from './style.css'
+
 const inactive = `
   color: #797979;
   fill: #797979;
@@ -239,7 +241,7 @@ export const TrashItemIcon = props => (
     activeStyle={styles.active}
     inactiveStyle={styles.inactive}
     {...props}
-    className='sl-bin'
+    className="sl-bin"
   />
 )
 
@@ -249,14 +251,14 @@ export const EditItemIcon = props => {
       activeStyle={styles.active}
       inactiveStyle={styles.inactive}
       {...props}
-      className='sl-pencil-circle'
+      className="sl-pencil-circle"
     />
   ) : (
     <IconContainer
       activeStyle={styles.active}
       inactiveStyle={styles.inactive}
       {...props}
-      className='sl-pencil-circle'
+      className="sl-pencil-circle"
     />
   )
 }
@@ -266,7 +268,7 @@ export const ConnectItemIcon = props => (
     activeStyle={styles.active}
     inactiveStyle={styles.inactive}
     {...props}
-    className='sl-link'
+    className="sl-link"
   />
 )
 
@@ -275,7 +277,7 @@ export const AddItemIcon = props => (
     activeStyle={styles.active}
     inactiveStyle={styles.inactive}
     {...props}
-    className='sl-add-circle'
+    className="sl-add-circle"
   />
 )
 

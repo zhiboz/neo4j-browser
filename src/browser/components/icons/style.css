@@ -1,0 +1,48 @@
+.inactive {
+  color: #797979;
+}
+.green {
+  color: #4cd950;
+}
+.successGreen {
+  color: #4cd950;
+}
+.orange {
+  color: #f79868;
+}
+.blue {
+  color: #58c8e3;
+}
+.purple {
+  color: #db7295;
+}
+.yellow {
+  color: #ffaf00;
+}
+.alertYellow {
+  color: #ffaf00;
+}
+.warningRed {
+  color: #df4d3b;
+}
+.white {
+  color: #ffffff;
+}
+.lightBlue {
+  color: #5dade2;
+}
+
+@keyframes neo4j-pulse {
+  0%,
+  100% {
+    color: #1bf621;
+  }
+  50% {
+    color: #00a3ff;
+  }
+}
+
+.credits {
+  animation: neo4j-pulse 2s infinite;
+  animation-timing-function: ease-in-out;
+}

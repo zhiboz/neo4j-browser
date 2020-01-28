@@ -50,4 +50,21 @@ export default class Node {
     }
     return rels.length
   }
+
+  setProperties = function(properties) {
+    var key, value
+    this.propertyMap = properties
+    return (this.propertyList = (function() {
+      var results
+      results = []
+      for (key in properties) {
+        value = properties[key]
+        results.push({
+          key: key,
+          value: value
+        })
+      }
+      return results
+    })())
+  }
 }

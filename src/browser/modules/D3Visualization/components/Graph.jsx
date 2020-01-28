@@ -55,10 +55,11 @@ import {
   DrawerSectionBody,
   DrawerSubHeader
 } from 'src-root/browser/components/drawer'
+
 import graphView from '../lib/visualization/components/graphView'
 
 export class GraphComponent extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       zoomInLimitReached: true,
@@ -87,7 +88,7 @@ export class GraphComponent extends Component {
     })
   }
 
-  trashItemClicked () {
+  trashItemClicked() {
     const item = this.props.selectedItem
 
     this.props.deleteItem(item).then(item => {
@@ -99,7 +100,7 @@ export class GraphComponent extends Component {
     })
   }
 
-  connectItemClicked () {
+  connectItemClicked() {
     const targetItem = this.props.selectedItem
 
     if (!this.state.connectionSourceItem) {
@@ -109,11 +110,11 @@ export class GraphComponent extends Component {
     }
   }
 
-  addItemClicked () {
+  addItemClicked() {
     this.props.addItem({ type: 'node' }).then(this.addPartialGraph.bind(this))
   }
 
-  onItemSelect (item) {
+  onItemSelect(item) {
     this.props.onItemSelect(item)
 
     if (this.state.connectionSourceItem) {
@@ -126,7 +127,7 @@ export class GraphComponent extends Component {
     }
   }
 
-  addPartialGraph (graph) {
+  addPartialGraph(graph) {
     this.graph.addNodes(mapNodes(graph.nodes))
     this.graph.addRelationships(
       mapRelationships(graph.relationships, this.graph)
@@ -143,13 +144,19 @@ export class GraphComponent extends Component {
     this.graphEH.graphModelChanged()
   }
 
-  deleteRelationship (item) {
+  deleteRelationship(item) {
     const relationship = this.graph.findRelationship(item.id)
     this.graph.removeRelationship(relationship)
     this.graphEH.propagateChange()
   }
 
-  updateGraph (graph) {
+  // deleteRelationshipById (relationshipId) {
+  //   const relationship = this.graph.findRelationship(item.id)
+  //   this.graph.removeRelationship(relationship)
+  //   this.graphEH.propagateChange()
+  // }
+
+  updateGraph(graph) {
     const lastSelection = this.graphEH.selectedItem
     this.graphEH.deselectItem()
 
@@ -173,7 +180,7 @@ export class GraphComponent extends Component {
     this.graphEH.graphModelChanged()
   }
 
-  getVisualAreaHeight () {
+  getVisualAreaHeight() {
     return this.props.frameHeight && this.props.fullscreen
       ? this.props.frameHeight -
           (dim.frameStatusbarHeight + dim.frameTitlebarHeight * 2)
@@ -280,7 +287,7 @@ export class GraphComponent extends Component {
     return null
   }
 
-  editButton () {
+  editButton() {
     const item = this.props.selectedItem
     const hasType = !!item
     const isCanvas = hasType && item['type'] === 'canvas'
@@ -322,10 +329,10 @@ export class GraphComponent extends Component {
     )
   }
 
-  render () {
+  render() {
     return (
       <StyledSvgWrapper>
-        <svg className='neod3viz' ref={this.graphInit.bind(this)} />
+        <svg className="neod3viz" ref={this.graphInit.bind(this)} />
         {this.editButton()}
         {this.zoomButtons()}
       </StyledSvgWrapper>

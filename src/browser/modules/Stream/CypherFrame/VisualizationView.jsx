@@ -128,7 +128,7 @@ export class Visualization extends Component {
     })
   }
 
-  deleteItem (item) {
+  deleteItem(item) {
     let query = ''
 
     if (item.type === 'node') {
@@ -154,7 +154,7 @@ export class Visualization extends Component {
     })
   }
 
-  addItem () {
+  addItem() {
     const query = `CREATE (n:Unlabeled)
                    RETURN n`
 
@@ -175,7 +175,7 @@ export class Visualization extends Component {
     })
   }
 
-  setItemProperty (item, key, value) {
+  setItemProperty(item, key, value) {
     let query = ''
 
     if (item.type === 'node') {
@@ -207,7 +207,7 @@ export class Visualization extends Component {
     })
   }
 
-  removeItemProperty (item, key) {
+  removeItemProperty(item, key) {
     let query = ''
 
     if (item.type === 'node') {
@@ -239,14 +239,37 @@ export class Visualization extends Component {
     })
   }
 
-  setRelationshipType (item, type) {
+  setRelationshipType(item, type) {
+    // first we need to query and save the old relationship
+    // since neo4j can't return it once it's been deleted
+
+    const query_old = `MATCH (n)-[old]->(m)
+                       WHERE ID(old) = ${item.item.id}
+                       RETURN old`
+    let oldRel
+    this.props.bus.self(CYPHER_REQUEST, { query: query_old }, response => {
+      if (!response.success) {
+        console.log('OLD RELATIONSHIP QUERY ERROR!')
+        console.log(response)
+      } else {
+        const resultGraph = bolt.extractNodesAndRelationshipsFromRecordsForOldVis(
+          response.result.records,
+          false
+        )
+        oldRel = resultGraph.relationships[0]
+      }
+    })
+
+    // here we create the new relationship, delete the
+    // old, and return the new one
     const query = `MATCH (n)-[old]->(m)
                    WHERE id(old) = ${item.item.id}
                    CREATE (n)-[new:${type}]->(m)
                    SET new = old
-                   WITH old, new
+                   WITH new, old, ID(old) AS oldId
                    DELETE old
-                   RETURN new, old`
+                   RETURN new`
+    //  RETURN new, oldId`
 
     return new Promise((resolve, reject) => {
       this.props.bus &&
@@ -258,6 +281,8 @@ export class Visualization extends Component {
               response.result.records,
               false
             )
+            // add the old relationship to our resultGraph
+            resultGraph.relationships.push(oldRel)
             this.autoCompleteRelationships(this.graph._nodes, resultGraph.nodes)
             resolve({ ...resultGraph, count: 1 })
           }
@@ -265,7 +290,7 @@ export class Visualization extends Component {
     })
   }
 
-  addNodeLabel (item, label) {
+  addNodeLabel(item, label) {
     const query = `MATCH (node)
                    WHERE id(node) = ${item.item.id}
                    SET node:\`${label}\`
@@ -288,7 +313,7 @@ export class Visualization extends Component {
     })
   }
 
-  removeNodeLabel (item, label) {
+  removeNodeLabel(item, label) {
     const query = `MATCH (node)
                    WHERE id(node) = ${item.item.id}
                    REMOVE node:\`${label}\`
@@ -311,12 +336,10 @@ export class Visualization extends Component {
     })
   }
 
-  connectItems (source, target) {
+  connectItems(source, target) {
     const query = `MATCH (source)
                    MATCH (target)
-                   WHERE id(source) = ${source.item.id} AND id(target) = ${
-  target.item.id
-}
+                   WHERE id(source) = ${source.item.id} AND id(target) = ${target.item.id}
                    CREATE (source)-[rel:untyped]->(target)
                    RETURN source, rel, target`
 
@@ -337,7 +360,7 @@ export class Visualization extends Component {
     })
   }
 
-  getInternalRelationships (existingNodeIds, newNodeIds) {
+  getInternalRelationships(existingNodeIds, newNodeIds) {
     newNodeIds = newNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.map(bolt.neo4j.int)
     existingNodeIds = existingNodeIds.concat(newNodeIds)
@@ -422,8 +445,5 @@ const mapDispatchToProps = dispatch => {
 }
 
 export const VisualizationConnectedBus = withBus(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Visualization)
+  connect(mapStateToProps, mapDispatchToProps)(Visualization)
 )
