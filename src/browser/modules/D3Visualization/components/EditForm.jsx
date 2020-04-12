@@ -10,16 +10,13 @@ import {
   FormLabel,
   FormValue
 } from './styled'
-import {
-  CloseIcon,
-  PlainPlayIcon
-} from 'src-root/browser/components/icons/Icons'
+import { CloseIcon, SaveIcon } from 'src-root/browser/components/icons/Icons'
 import { Textarea, TextInput } from 'src-root/browser/components/Form'
 
 export class EditForm extends Component {
   KEY_CONVENTION = /^[^\d\s]\S+$/i
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.result = {}
     this.state = {
@@ -27,26 +24,26 @@ export class EditForm extends Component {
     }
   }
 
-  formElements () {
+  formElements() {
     throw new Error('You have to implement this method!')
   }
 
-  isValid () {
+  isValid() {
     throw new Error('You have to implement this method!')
   }
 
-  handleSubmit (event) {
+  handleSubmit(event) {
     this.props.onSubmit(this.result)
     this.props.onClose()
     event.preventDefault()
   }
 
-  handleChange (event) {
+  handleChange(event) {
     this.result[event.target.name] = event.target.value
     this.setState({ isValid: this.isValid() })
   }
 
-  render () {
+  render() {
     return (
       <StyledModalFormHolder>
         <StyledModalFormWrapper>
@@ -59,15 +56,15 @@ export class EditForm extends Component {
                 }}
               >
                 <EditFormButton
-                  key='save'
-                  label='Save'
-                  icon={<PlainPlayIcon />}
+                  key="save"
+                  label="Save"
+                  icon={<SaveIcon />}
                   onClick={this.handleSubmit.bind(this)}
                   disabled={!this.state.isValid}
                 />
                 <EditFormButton
-                  key='cancel'
-                  label='Cancel'
+                  key="cancel"
+                  label="Cancel"
                   icon={<CloseIcon />}
                   onClick={this.props.onClose}
                 />
@@ -81,7 +78,7 @@ export class EditForm extends Component {
 }
 
 export class EditPropertyForm extends EditForm {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.result = {
       key: props.values.key || '',
@@ -89,11 +86,11 @@ export class EditPropertyForm extends EditForm {
     }
   }
 
-  isValid () {
+  isValid() {
     return this.result.key.match(this.KEY_CONVENTION)
   }
 
-  formElements () {
+  formElements() {
     return (
       <FormElements>
         <FormHeader>Add/Edit Property</FormHeader>
@@ -102,7 +99,7 @@ export class EditPropertyForm extends EditForm {
           <FormLabel>Key</FormLabel>
           <FormValue>
             <TextInput
-              name='key'
+              name="key"
               defaultValue={this.props.values.key}
               onChange={this.handleChange.bind(this)}
               autoFocus
@@ -114,8 +111,8 @@ export class EditPropertyForm extends EditForm {
           <FormLabel>Value</FormLabel>
           <FormValue>
             <Textarea
-              name='value'
-              rows='6'
+              name="value"
+              rows="6"
               defaultValue={this.props.values.value}
               onChange={this.handleChange.bind(this)}
             />
@@ -127,18 +124,18 @@ export class EditPropertyForm extends EditForm {
 }
 
 export class EditRelationshipTypeForm extends EditForm {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.result = {
       relationshipType: props.values.relationshipType || ''
     }
   }
 
-  isValid () {
+  isValid() {
     return this.result.relationshipType.match(this.KEY_CONVENTION)
   }
 
-  formElements () {
+  formElements() {
     return (
       <FormElements>
         <FormHeader>Edit Type</FormHeader>
@@ -147,7 +144,7 @@ export class EditRelationshipTypeForm extends EditForm {
           <FormLabel>Type</FormLabel>
           <FormValue>
             <TextInput
-              name='relationshipType'
+              name="relationshipType"
               defaultValue={this.props.values.relationshipType}
               onChange={this.handleChange.bind(this)}
               autoFocus
@@ -160,18 +157,18 @@ export class EditRelationshipTypeForm extends EditForm {
 }
 
 export class AddNodeLabelForm extends EditForm {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.result = {
       label: ''
     }
   }
 
-  isValid () {
+  isValid() {
     return this.result.label.match(this.KEY_CONVENTION)
   }
 
-  formElements () {
+  formElements() {
     return (
       <FormElements>
         <FormHeader>Add Label</FormHeader>
@@ -180,7 +177,7 @@ export class AddNodeLabelForm extends EditForm {
           <FormLabel>Label</FormLabel>
           <FormValue>
             <TextInput
-              name='label'
+              name="label"
               onChange={this.handleChange.bind(this)}
               autoFocus
             />

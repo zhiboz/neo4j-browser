@@ -332,6 +332,7 @@ export const PlayIcon = () => (
 export const PlainPlayIcon = () => (
   <IconContainer className="fa fa-play-circle" />
 )
+export const SaveIcon = () => <IconContainer className="fa fa-save" />
 export const QuestionIcon = props => (
   <IconContainer
     activeStyle={lightBlue}
