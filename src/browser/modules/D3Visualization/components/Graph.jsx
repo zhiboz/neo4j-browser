@@ -262,7 +262,7 @@ export class GraphComponent extends Component {
   }
 
   zoomButtons() {
-    if (this.props.fullscreen) {
+    if (true) {
       return (
         <StyledZoomHolder>
           <StyledZoomButton
